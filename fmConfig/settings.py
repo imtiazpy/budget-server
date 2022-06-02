@@ -33,7 +33,7 @@ LOCAL_APPS = [
 ]
 
 THIRD_PARTY_LIBRARY = [
-    'restframework',
+    'rest_framework',
     'djoser',
 ]
 
@@ -127,6 +127,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # RestFrameWork settings
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -150,15 +153,17 @@ DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
-        
+        'user_create': 'users.api.serializers.UserCreateSerializer',
+        'user': 'users.api.serializers.UserCreateSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
     }
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smpt.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'test@test.com' #Todo: use environment variable for host.
-EMAIL_HOST_PASSWORD = 'testpassword' #Todo: use environment variable for password
+EMAIL_HOST_USER = 'ahmedimtiaz561@gmail.com' #Todo: use environment variable for host.
+EMAIL_HOST_PASSWORD = 'xextmmrssuhgcrkj' #Todo: use environment variable for password
 EMAIL_USE_TLS = True
 
 # Default primary key field type
