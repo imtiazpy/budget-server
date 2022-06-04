@@ -14,7 +14,7 @@ class UserCreateSerializer(UserCreateSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    """Serialzer for retrieve update and delete profile"""
+    """Serializer for retrieve update and delete profile"""
     class Meta:
         model = Profile
         fields = '__all__'
