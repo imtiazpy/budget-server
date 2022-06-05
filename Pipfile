@@ -11,6 +11,7 @@ djoser = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
 pillow = "*"
+django-ordered-model = "*"
 
 [dev-packages]
 

@@ -30,11 +30,13 @@ INSTALLED_APPS = [
 
 LOCAL_APPS = [
     'users.apps.UsersConfig',
+    'budget',
 ]
 
 THIRD_PARTY_LIBRARY = [
     'rest_framework',
     'djoser',
+    'ordered_model',
 ]
 
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_LIBRARY
