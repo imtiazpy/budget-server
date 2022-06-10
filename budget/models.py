@@ -160,10 +160,10 @@ def update_budget(sender, instance, created, *args, **kwargs):
         surplus_yearly += _budget.income.total_yearly    
     
     if _budget.expense:
-        surplus_weekly -= _budget.income.total_weekly    
-        surplus_bi_weekly -= _budget.income.total_bi_weekly    
-        surplus_monthly -= _budget.income.total_monthly    
-        surplus_yearly -= _budget.income.total_yearly
+        surplus_weekly -= _budget.expense.total_weekly    
+        surplus_bi_weekly -= _budget.expense.total_bi_weekly    
+        surplus_monthly -= _budget.expense.total_monthly    
+        surplus_yearly -= _budget.expense.total_yearly
     
     _budget.surplus_weekly = surplus_weekly
     _budget.surplus_bi_weekly = surplus_bi_weekly
