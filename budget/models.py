@@ -33,6 +33,10 @@ class Category(models.Model):
     def __str__(self):
         return f'Category-{self.id}-{self.name}'
 
+    @property
+    def get_name(self):
+        return f'Category-{self.id}-{self.name}'
+
     @staticmethod
     def update_category_order(category, is_add=True):
         categories = Category.objects.filter(budget=category.budget, order__gte=category.order).exclude(id=category.id)
@@ -60,7 +64,15 @@ class CategoryItem(OrderedModel):
 
     def __str__(self):
         return f'CategoryItem-{self.id}-{self.name}'
-
+    
+    @property
+    def get_name(self):
+        return f'CategoryItem-{self.id}-{self.name}'
+    
+    @property
+    def get_budget(self):
+        budgets = self.category.income_budgets.all()
+        return [budget.name for budget in budgets]
     class Meta(OrderedModel.Meta):
         ordering = ['order', 'pk']
 
@@ -80,13 +92,33 @@ class Budget(models.Model):
     surplus_yearly = models.DecimalField(_("Surplus Yearly"), default=0, max_digits=13, decimal_places=2)
     created_by = models.ForeignKey(User, related_name="budgets", on_delete=models.CASCADE, null=True, blank=True)
     order = models.IntegerField(_("Order"), default=0)
-
-    def __str__(self):
-        return f"Budget-{self.id}-{self.name}"
     
     def custom_categories(self):
         # we have foreign key relation with Category model, related_name as categories
         return self.categories.filter(c_type=3).order_by('order')
+
+    def __str__(self):
+        return f"Budget-{self.id}-{self.name}"
+
+    @property
+    def get_name(self):
+        return f"Budget-{self.id}-{self.name}"
+
+    @property
+    def income_monthly_total(self):
+        try:
+            return sum([item.monthly for item in self.income.items.all()])
+        except:
+            return "Income Table not found"
+    
+
+    @property
+    def expense_monthly_total(self):
+        try:
+            return sum([item.monthly for item in self.expense.items.all()])
+        except:
+            return "Expense Table not found"
+            
 
     @staticmethod
     def init_budget(user):
