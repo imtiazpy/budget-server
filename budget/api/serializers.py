@@ -12,25 +12,6 @@ class BudgetListSerializer(serializers.ModelSerializer):
 
 
 
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-    
-    def validate_budget(self, value):
-        """
-        This function checks if the user is the owner of the Budget, before allowing the user to push a Category into the Budget.
-        """
-        budget = Budget.objects.get(id=value.id)
-        user = self.context['request'].user
-        
-        if budget.created_by != user:
-            raise serializers.ValidationError("You do not have permission to perform this action")
-        
-        return value
-
-
 class CategoryItemSerializer(serializers.ModelSerializer):
     """For Listing and creating"""
     class Meta:
@@ -47,6 +28,27 @@ class CategoryItemSerializer(serializers.ModelSerializer):
         if category.budget.created_by != user:
             raise serializers.ValidationError("You do not have permission to perform this action")
         return value
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    items = CategoryItemSerializer(many=True, read_only=True)
+    class Meta:
+        model = Category
+        fields = '__all__'
+    
+    def validate_budget(self, value):
+        """
+        This function checks if the user is the owner of the Budget, before allowing the user to push a Category into the Budget.
+        """
+        budget = Budget.objects.get(id=value.id)
+        user = self.context['request'].user
+        
+        if budget.created_by != user:
+            raise serializers.ValidationError("You do not have permission to perform this action")
+        
+        return value
+
 
 class BudgetSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True, source='custom_categories')
