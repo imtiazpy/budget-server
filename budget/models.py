@@ -33,6 +33,7 @@ class Category(models.Model):
     def __str__(self):
         return f'Category-{self.id}-{self.name}'
 
+    @staticmethod
     def update_category_order(category, is_add=True):
         categories = Category.objects.filter(budget=category.budget, order__gte=category.order).exclude(id=category.id)
 
@@ -71,8 +72,8 @@ class Budget(models.Model):
     title = models.CharField(_("Title"), max_length=150, default="Summary of Monthly Budgeted Expenses", blank=True)
     pie_title = models.CharField(_("Pie Title"), max_length=150, null=True, blank=True)
     persistent = models.BooleanField(_("Persistent"), default=False)
-    income = models.ForeignKey('budget.Category', related_name="income_budgets", on_delete=models.CASCADE, null=True, blank=True)
-    expense = models.ForeignKey('budget.Category', related_name="expense_budgets", on_delete=models.CASCADE, null=True, blank=True)
+    income = models.ForeignKey('budget.Category', related_name="income_budgets", on_delete=models.SET_NULL, null=True, blank=True)
+    expense = models.ForeignKey('budget.Category', related_name="expense_budgets", on_delete=models.SET_NULL, null=True, blank=True)
     surplus_weekly = models.DecimalField(_("Surplus Weekly"), default=0, max_digits=13, decimal_places=2)
     surplus_bi_weekly = models.DecimalField(_("Surplus BeWeekly"), default=0, max_digits=13, decimal_places=2)
     surplus_monthly = models.DecimalField(_("Surplus Monthly"), default=0, max_digits=13, decimal_places=2)
@@ -122,12 +123,11 @@ class Budget(models.Model):
 
 def update_category(instance):
     """
-    updating the total field of Category Table
+    updating the total field of Category Table while adding/deleting CategoryItem
     """
     _category = instance.category
 
     summary = _category.items.aggregate(Sum('weekly'), Sum('bi_weekly'), Sum('monthly'), Sum('yearly'))
-    print(summary)
 
     _category.total_weekly = summary['weekly__sum'] or 0
     _category.total_bi_weekly = summary['bi_weekly__sum'] or 0
@@ -145,7 +145,7 @@ def on_delete_item(sender, instance, created, *args, **kwargs):
 
 def update_budget(sender, instance, created, *args, **kwargs):
     """
-    Method used for updating the surplus fields of Budget
+    Method used for updating the surplus fields of Budget while populating the Category table
     """
     _budget= instance.budget
     surplus_weekly = 0
@@ -180,7 +180,7 @@ def update_budget(sender, instance, created, *args, **kwargs):
                 item.save()
                 break
         if created:
-            Category.update_order(instance)
+            Category.update_category_order(instance)
 
 
 def on_delete_category(sender, instance, *args, **kwargs):
@@ -199,9 +199,9 @@ def set_budget_order(sender, instance, created, *args, **kwargs):
 
 
 post_save.connect(on_update_item, sender=CategoryItem)
-post_delete.connect(on_delete_item, sender=CategoryItem)
+# post_delete.connect(on_delete_item, sender=CategoryItem)
 
 post_save.connect(update_budget, sender=Category)
-post_delete.connect(on_delete_category, sender=Category)
+# post_delete.connect(on_delete_category, sender=Category)
 
 post_save.connect(set_budget_order, sender=Budget)
