@@ -10,10 +10,7 @@ class BudgetListSerializer(serializers.ModelSerializer):
         model = Budget
         fields = ('id', 'name', )
 
-class BudgetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Budget
-        fields = '__all__'
+
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -50,3 +47,11 @@ class CategoryItemSerializer(serializers.ModelSerializer):
         if category.budget.created_by != user:
             raise serializers.ValidationError("You do not have permission to perform this action")
         return value
+
+class BudgetSerializer(serializers.ModelSerializer):
+    categories = CategorySerializer(many=True, source='custom_categories')
+    income = CategorySerializer(read_only=True)
+    expense = CategorySerializer(read_only=True)
+    class Meta:
+        model = Budget
+        fields = '__all__'
