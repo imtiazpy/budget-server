@@ -15,7 +15,9 @@ SECRET_KEY = 'django-insecure-1t0h+ec7@%!j(c4q%-4el1#t@810@a+f#+)dpt6yqam@6)y-4&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
 
 
 # Application definition
@@ -38,6 +40,7 @@ THIRD_PARTY_LIBRARY = [
     'rest_framework',
     'djoser',
     'ordered_model',
+    'corsheaders',
 ]
 
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_LIBRARY
@@ -45,6 +48,7 @@ INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_LIBRARY
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -155,7 +159,7 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     # using email as username reset url bcoz we are using email as username
     'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}', 
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'ACTIVATION_URL': 'api/v1/users/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {
         'user_create': 'users.api.serializers.UserCreateSerializer',
