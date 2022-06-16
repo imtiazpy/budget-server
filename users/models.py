@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils.translation import gettext as _
+from django.core.exceptions import ValidationError
 
 class CustomBaseUserManager(BaseUserManager):
     def create_user(self, email, name, password=None):
@@ -54,6 +55,12 @@ GENDERS = (
     (2, 'Female'),
     (3, 'Other'),
 )
+
+def validate_str(value):
+    """Not used"""
+    if type(value) != 'str':
+        raise ValidationError('Invalid data')
+
 class Profile(models.Model):
     """Model for users profile"""
     owner = models.OneToOneField(
