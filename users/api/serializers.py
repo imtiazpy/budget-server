@@ -8,7 +8,7 @@ from users.models import Profile
 User = get_user_model()
 
 
-class UserCreateSerializer(UserCreateSerializer):
+class UserSerializer(UserCreateSerializer):
     """Serializer for User creation and retrieve"""
     class Meta(UserCreateSerializer.Meta):
         model = User
@@ -27,7 +27,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     profile = ProfileFields()
     class Meta:
         model = User
-        fields = ('name', 'profile', )
+        fields = ('name', 'avatar', 'profile', )
         # read_only_fields = ('owner', )
     
     @transaction.atomic
