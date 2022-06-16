@@ -12,6 +12,7 @@ User = get_user_model()
 
 
 class ProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """To get the profile fields and Update profile"""
     serializer_class = ProfileSerializer
     queryset = User.objects.all()
 
@@ -19,7 +20,10 @@ class ProfileAPIView(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(User, id=self.request.user.id, is_active=True)
 
 
+
+
 class AvatarUploadView(generics.UpdateAPIView):
+    """single endpoint to upload user avatar"""
     serializer_class = AvatarUploadSerializer
     queryset = User.objects.all()
 
