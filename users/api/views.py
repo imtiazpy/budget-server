@@ -40,7 +40,7 @@ class UserActivationView(generics.GenericAPIView):
 
         response = requests.post(url, data=payload)
 
-        return redirect("http://localhost:3000/sign-in")
+        return redirect("http://localhost:3000/activation-success")
 
         # if response.status_code == 204:
         #     return Response({}, response.status_code)
