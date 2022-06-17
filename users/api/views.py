@@ -46,3 +46,11 @@ class UserActivationView(generics.GenericAPIView):
         #     return Response({}, response.status_code)
         # else:
         #     return Response(response.json())
+
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    """passing UID and TOKEN to frontend to submit password reset confirm"""
+    permission_classes = [AllowAny]
+
+    def get(self, request, uid, token, format=None):
+        return redirect(f"http://localhost:3000/reset-confirm/{uid}/{token}")
